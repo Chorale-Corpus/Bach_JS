@@ -1,92 +1,111 @@
-# Bach_JS
+![Version](https://img.shields.io/github/v/release/Chorale-Corpus/Bach_JS?display_name=tag)
+<!-- Zenodo DOI badge: insert after the first archived release, e.g.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXXX) -->
+![GitHub repo size](https://img.shields.io/github/repo-size/Chorale-Corpus/Bach_JS)
+![License](https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-9cf)
+
+
+This is a README file for a data repository originating from the [Chorale Corpus initiative](https://github.com/Chorale-Corpus), a multi-institutional effort to bring together a wide collection of digital chorale transcriptions for musicians and researchers. This repository is a sub-corpus of the meta-corpus [Chorale-Corpus/data](https://github.com/Chorale-Corpus/data) ([DOI 10.5281/zenodo.17229783](https://doi.org/10.5281/zenodo.17229783)).
+
+When you use (parts of) this dataset in your work, please read and cite the accompanying data report:
+
+_Gerhardt, K., Hentschel, J., Phan, V. D., Kirsch, M., Kirsch, K., & Gotham, M. R. H. (2026). Beyond Ba(t)ch: A Multimodal Meta-Corpus of Digital Chorale Transcriptions and Related Data. Transactions of the International Society for Music Information Retrieval, 9(1), 440–455. https://doi.org/10.5334/tismir.226_
+
+# A digital edition of the 389 Chorale Settings (Choralgesänge) by J.S. Bach
+
+This corpus has been made possible by Gertim Alberda, who 'manually' digitalized all 389 Bach four-voice chorales as published by the Breitkopf edition no. 3765 (see the included submodule [`389_chorale_settings`](https://github.com/johentsch/389_chorale_settings), which contains the authoritative MuseScore files in two versions: `original_complete` and `vocal_parts_only`). Only the `vocal_parts_only` version (without instrumental parts) is included in the file conversions of this repository and in the Chorale Corpus at large.
+
+Unique within the Chorale Corpus, this sub-corpus additionally provides note-level [score-to-audio alignments](#score-to-audio-alignments) with a commercial recording for 303 of the chorales.
+
+## Getting the data
+
+* download the repository as a [ZIP file](https://github.com/Chorale-Corpus/Bach_JS/archive/refs/heads/main.zip) — note that GitHub ZIP archives do not include submodule content, so this download comes without the MuseScore source files (the converted formats are included) — see [Download of the MuseScore sources](#download-of-the-musescore-sources)
+* download a [Frictionless Datapackage](https://specs.frictionlessdata.io/data-package/) that includes concatenations of the TSV files in the folders `measures`, `notes`, and `chords`, and a JSON descriptor:
+  * [bach_js.zip](https://github.com/Chorale-Corpus/Bach_JS/releases/latest/download/bach_js.zip)
+  * [bach_js.datapackage.json](https://github.com/Chorale-Corpus/Bach_JS/releases/latest/download/bach_js.datapackage.json)
+* clone the repo: `git clone --recursive https://github.com/Chorale-Corpus/Bach_JS.git` (the `--recursive` flag pulls in the included submodule)
 
 ## File formats
 
-Information related to one and the same chorale is represented in multiple variants and formats.
-Each comes with its own advantages and disadvantages and users should make informed choices.
-Filenames function as IDs in this context in the sense that files representing (information from)
-the same chorale share the same filename prefix.
+Information related to one and the same chorale is represented in multiple variants and formats. Each comes with its own advantages and disadvantages and users should make informed choices. Filenames function as IDs in this context in the sense that files representing (information from) the same chorale share the same filename prefix.
 
 ### Authoritative file format: MSCX
 
-At the moment, only one file format in this dataset can be trusted to contain the full amount of 
-information to the highest degree of accuracy: the uncompressed MuseScore files ending on 
-`.mscx` which can be opened with MuseScore 3 or 4.
-To date, we allow modification of these files using 
-[MuseScore version 3.6.2](https://github.com/musescore/MuseScore/releases/tag/v3.6.2) exclusively.
-However, we use the latest version of MuseScore 4 
-(v4.4.4 at the time of writing this in February 2025) to convert these files to MEI and musicXML.
-Apart from these format, the information from the MuseScore files is accessible by means of 
-tabular files in TSV format, 3 per chorale: `*.notes.tsv`, `*.measures.tsv`, and `*.chords.tsv`
-(although the naming of the last is misleading as it contains mainly markup, lyrics, bass figures, etc.).
+At the moment, only one file format in this dataset can be trusted to contain the full amount of information to the highest degree of accuracy: the uncompressed MuseScore files ending on `.mscx` which can be opened with MuseScore 3 or 4. Contrary to the other sub-corpora of the Chorale Corpus, these files are not part of this repository itself: they live in the nested submodule [`389_chorale_settings`](https://github.com/johentsch/389_chorale_settings) (folders `original_complete/MS3` and `vocal_parts_only/MS3`), and all conversions and TSV extractions in this repository derive exclusively from the `vocal_parts_only` version. To date, we allow modification of these files using [MuseScore version 3.6.2](https://github.com/musescore/MuseScore/releases/tag/v3.6.2) exclusively. However, we use the latest version of MuseScore 4 (v4.4.4 at the time of writing this in February 2025) to convert these files to MEI and musicXML. Apart from these format, the information from the MuseScore files is accessible by means of tabular files in TSV format, 3 per chorale: `*.notes.tsv`, `*.measures.tsv`, and `*.chords.tsv` (although the naming of the last is misleading as it contains mainly markup, lyrics, bass figures, etc.).
 
-The latest version of the Python library `ms3` is used to batch convert the MuseScore files
-to other formats (`ms3 convert`) and to extract score information to TSV files (`ms3 extract`).
+The latest version of the Python library `ms3` is used to batch convert the MuseScore files to other formats (`ms3 convert`) and to extract score information to TSV files (`ms3 extract`).
 
 ### MEI
 
-To date, MuseScore 4 is able to convert files to MEI Basic 5.0 format. Take these files with a 
-grain of salt as we cannot guarantee congruence with the source files.
-The quality of these files makes them unsuitable for music research but they may serve as a 
-starting point for a well-curated scholarly edition.
-In the long run, provided the maturing of the relevant tools, the MEI files should take on 
-the role of being the authoritative format.
-Until then, they should not be manually modified because they are to be re-generated by conversion
-and overwritten once the authoritative MuseScore files are modified.
+To date, MuseScore 4 is able to convert files to MEI Basic 5.0 format. Take these files with a grain of salt as we cannot guarantee congruence with the source files. The quality of these files makes them unsuitable for music research but they may serve as a starting point for a well-curated scholarly edition. In the long run, provided the maturing of the relevant tools, the MEI files should take on the role of being the authoritative format. Until then, they should not be manually modified because they are to be re-generated by conversion and overwritten once the authoritative MuseScore files are modified.
 
 ### musicXML
 
-For convenience and in addition, we offer the chorales in musicXML format. However, experience
-shows that musicXML files output by MuseScore come with a number of issues and conversion errors.
-These files are unsuited for scholarly work but some users may still appreciate their availability.
+For convenience and in addition, we offer the chorales in musicXML format. However, experience shows that musicXML files output by MuseScore come with a number of issues and conversion errors. These files are unsuited for scholarly work but some users may still appreciate their availability.
 
 ### TSV files
 
-Tab-separated files are a dialect of CSV files and can be used the exact same way.
-The most convenient way of viewing them is through a spreadsheet program such as LibreOffice Calc
-(Excel, Numbers, Sheets, etc.) or a text editor with TSV support/plugin.
-Power users may want to load them in their favourite programming language or statistical software.
+Tab-separated files are a dialect of CSV files and can be used the exact same way. The most convenient way of viewing them is through a spreadsheet program such as LibreOffice Calc (Excel, Numbers, Sheets, etc.) or a text editor with TSV support/plugin. Power users may want to load them in their favourite programming language or statistical software.
 
 You can look up what any column means in the documentation of ms3: https://ms3.readthedocs.io/columns
 
-The most important TSV file is called `metadata.tsv`. It contains one row per chorale,
-and comes with a number of columns that describe the piece in numerous ways.
-A synoptic overview of the most important columns can be found 
-[here](https://dcmlab.github.io/mozart_piano_sonatas/#how-to-read-metadata-tsv).
+The most important TSV file is called `metadata.tsv`. It contains one row per chorale, and comes with a number of columns that describe the piece in numerous ways. A synoptic overview of the most important columns can be found [here](https://dcmlab.github.io/mozart_piano_sonatas/#how-to-read-metadata-tsv).
+
+### Loading TSV files in Python
+
+Since the TSV files contain null values, lists, fractions, and numbers that are to be treated as strings, you may want to use this code to load any TSV files related to this repository (provided you're doing it in Python). After a quick `pip install -U ms3` (requires Python 3.10 or later) you'll be able to load any TSV like this:
+
+```python
+import ms3
+
+notes = ms3.load_tsv("notes/B001.notes.tsv")
+metadata = ms3.load_tsv("metadata.tsv")
+```
+
+Each TSV file comes with its own JSON descriptor (`*.resource.json`) that describes the meanings and datatypes of its columns ("fields"), follows the [Frictionless specification](https://specs.frictionlessdata.io/tabular-data-resource/), and can be used to validate and correctly load the described file.
 
 
-### Score-to-audio alignments
+## Score-to-audio alignments
 
-This corpus includes an additional set of tables of notes in the subfolder 
-`389_chorale_settings/vocal_parts_only/note_alignments`. They correspond to unfolded/expanded 
-versions of the 303 chorale settings that have a counterpart in and have been aligned with the 
-recordings made by the Chamber Choir Of Europe under Nicol Matt in 1999 (e.g., CDs 122 through 127 
-(six CDs) of the release https://musicbrainz.org/release/5582b212-aea7-4355-8c4c-531ed438e5fc).
-Unfolded/expanded, here, means that they correspond to a "playthrough" respecting repeat signs and 
-first/second endings.
-This representation is a prerequisite for aligning the notes with the corresponding sounding events 
-in the recordings.
+A unique feature of this sub-corpus: 303 of the 389 chorale settings have been aligned, note by note, with the recordings made by the Chamber Choir of Europe under Nicol Matt in 1999 (CDs 122 through 127 of [this release](https://musicbrainz.org/release/5582b212-aea7-4355-8c4c-531ed438e5fc)). The alignments come as one TSV table per chorale in the folder [`389_chorale_settings/vocal_parts_only/note_alignments`](https://github.com/johentsch/389_chorale_settings/tree/main/vocal_parts_only/note_alignments): unfolded ("playthrough") versions of the notes tables, i.e. with repeats and first/second endings expanded, carrying two additional columns `start` and `end` with the timecodes of every note in the corresponding recording. The audio itself is commercial and cannot be included; the column `mb:recording` of `metadata.tsv` identifies the exact recording of each chorale via its MusicBrainz ID.
 
-First, the MusicBrainz recording IDs contained in the column `mb:recording` of the file 
-`metadata.tsv` were used to map the 303 scores (or rather, their unfolded notes TSVs) to the 
-respective audio files (which are commercial and cannot be provided). 
-Silence at the end of the audio files has been truncated beforehand using a 50 ms & -65 dB threshold. 
+Load them like any other TSV file of this corpus (see [above](#loading-tsv-files-in-python)):
 
-Then, the latest version of the `synctoolbox` (1.3.2) and 
-[this Python script](https://github.com/johentsch/Aligning-audio-to-annotated-score-labels/blob/bach/align_bach.py) 
-was used to compute start and end points of each note. The timecodes were added as two additional 
-columns, `start` and `end`, to the unfolded notes TSVs.
+```python
+import ms3
 
-An easy way to verify them (if you happen to have the recording of the Chamber Choir of Europe) 
-is to make a copy of the relevant TSV file in `389_chorale_settings/vocal_parts_only/note_alignments`,
-keeping only the last six columns (at the very least, `midi`, `start`, and `end`).
-This is because the [Sonic Visualizer](https://sonicvisualiser.org/) can only load the first few
-columns of a TSV/CSV file.
-Then you can load the aligned notes into the Sonic Visualizer like so:
+aligned_notes = ms3.load_tsv("389_chorale_settings/vocal_parts_only/note_alignments/B001_unfolded.notes.tsv")
+```
 
-![Screenshot showing how to import the reduced CSV file into the Sonic Visualizer](https://hostux.pics/images/2025/02/17/sonic_visualizerc836b5e2d792d532.png)
+The folder [`example_alignment`](./example_alignment) shows how to combine the alignments with audio: [`177.csv`](./example_alignment/177.csv) is the alignment table of chorale 177 with all but a few columns removed — [Sonic Visualiser](https://sonicvisualiser.org/) only makes the first few columns of an imported file available and needs just `midi`, `start`, and `end` — and [`177.sv`](./example_alignment/177.sv) the resulting session. The synchronization procedure is documented in [`ms3_realtime`](https://github.com/johentsch/ms3_realtime/).
+
+The aligned chorales are also mapped to Spotify: the column `spotify` of `metadata.tsv` contains each recording's Spotify track ID (its MusicBrainz ID is in `mb:recording`), and [`musicbrainz_spotify_aligned.tsv`](./example_alignment/musicbrainz_spotify_aligned.tsv), produced with [`align_metadata.ipynb`](./example_alignment/align_metadata.ipynb), maps CD tracks, MusicBrainz recordings, and Spotify tracks (incl. ISRCs and audio features).
 
 
+
+## Version history
+
+See the [GitHub releases](https://github.com/Chorale-Corpus/Bach_JS/releases).
+
+## Questions, Suggestions, Corrections, Bug Reports
+
+Please [create an issue](https://github.com/Chorale-Corpus/Bach_JS/issues) and/or feel free to fork and submit pull requests.
+
+## Cite as
+
+> Gerhardt, K., Hentschel, J., Phan, V. D., Kirsch, M., Kirsch, K., & Gotham, M. R. H. (2026). Beyond Ba(t)ch: A Multimodal Meta-Corpus of Digital Chorale Transcriptions and Related Data. Transactions of the International Society for Music Information Retrieval, 9(1), 440–455. https://doi.org/10.5334/tismir.226
+
+## License
+
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License ([CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)).
+
+![cc-by-nc-sa-image](https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png)
+
+## Download of the MuseScore sources
+
+⚠️ **In ZIP archives of this repository — including the one deposited on Zenodo — the folder `389_chorale_settings` is empty.** It is a git submodule pointing to [https://github.com/johentsch/389_chorale_settings](https://github.com/johentsch/389_chorale_settings), and automatically generated archives do not include submodule content. The authoritative MuseScore sources it contains are archived as a dataset of their own on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.11358761.svg)](https://doi.org/10.5281/zenodo.11358761)
+
+Download them from [https://doi.org/10.5281/zenodo.11358761](https://doi.org/10.5281/zenodo.11358761) (this DOI always resolves to the latest version) and extract the archive into the `389_chorale_settings` folder — or simply clone the repository with `git clone --recursive https://github.com/Chorale-Corpus/Bach_JS.git`.
 
 ## Overview
 |file_name|measures|labels|
